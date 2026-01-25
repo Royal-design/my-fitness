@@ -1,10 +1,6 @@
 import React from "react";
 import { Dimensions, Image } from "react-native";
-import Animated, {
-  interpolate,
-  SharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 import Carousel from "react-native-reanimated-carousel";
 
 const sliderImages = [
@@ -27,56 +23,50 @@ const sliderImages = [
 ];
 
 const { width: screenWidth } = Dimensions.get("window");
-const ITEM_WIDTH = screenWidth - 60;
+const ITEM_SPACING = 10;
+const ITEM_WIDTH = screenWidth - ITEM_SPACING * 2;
 const ITEM_HEIGHT = 200;
 
 export default function ImageSlider() {
+  const progress = useSharedValue(0);
+
   return (
     <Carousel
       width={ITEM_WIDTH}
       height={ITEM_HEIGHT}
       data={sliderImages}
       autoPlay
+      snapEnabled={true}
+      mode="parallax"
+      modeConfig={{ parallaxScrollingScale: 0.9, parallaxScrollingOffset: 50 }}
       loop
-      pagingEnabled
+      pagingEnabled={true}
+      onProgressChange={(absoluteProgress) => {
+        progress.value = absoluteProgress;
+      }}
       style={{ width: screenWidth }}
-      renderItem={({ item, animationValue }) => (
-        <ItemCard item={item} animationValue={animationValue} />
-      )}
+      renderItem={({ item }) => <ItemCard item={item} />}
     />
   );
 }
 
 type ItemCardProps = {
   item: (typeof sliderImages)[0];
-  animationValue: SharedValue<number>;
 };
 
-const ItemCard = ({ item, animationValue }: ItemCardProps) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    const scale = interpolate(animationValue.value, [-1, 0, 1], [0.9, 1, 0.9]);
-
-    return {
-      transform: [{ scale }],
-    };
-  });
-
+const ItemCard = ({ item }: ItemCardProps) => {
   return (
     <Animated.View
-      style={[
-        {
-          flex: 1,
-          borderRadius: 30,
-          overflow: "hidden",
-          marginHorizontal: 8,
-        },
-        animatedStyle,
-      ]}
+      style={{
+        flex: 1,
+        paddingHorizontal: ITEM_SPACING / 2,
+      }}
     >
       <Image
         source={{ uri: item.uri }}
         style={{ width: "100%", height: "100%" }}
         resizeMode="cover"
+        className="rounded-[30px]"
       />
     </Animated.View>
   );
