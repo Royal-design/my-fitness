@@ -13,6 +13,7 @@
     "@react-navigation/native": "^7.1.8",
     "@tanstack/react-query": "^5.90.20",
     "@types/react-native-snap-carousel": "^3.8.12",
+    "axios": "^1.13.3",
     "expo": "~54.0.32",
     "expo-constants": "~18.0.13",
     "expo-font": "~14.0.11",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
+    "react-native-dotenv": "^3.4.11",
     "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
   },
