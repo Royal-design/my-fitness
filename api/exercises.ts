@@ -10,4 +10,25 @@ const apiClient = axios.create({
   },
 });
 
-export default apiClient;
+export const getExercises = async (limit = 20, offset = 0) => {
+  const { data } = await apiClient.get(
+    `/exercises?limit=${limit}&offset=${offset}`,
+  );
+  return data;
+};
+
+export const getBodyParts = async () => {
+  const { data } = await apiClient.get("/exercises/bodyPartList");
+  return data;
+};
+
+export const getExercisesByBodyPart = async (
+  bodyPart: string,
+  limit = 20,
+  offset = 0,
+) => {
+  const { data } = await apiClient.get(
+    `/exercises/bodyPart/${bodyPart}?limit=${limit}&offset=${offset}`,
+  );
+  return data;
+};
